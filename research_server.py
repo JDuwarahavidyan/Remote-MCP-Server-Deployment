@@ -97,7 +97,6 @@ def extract_info(paper_id: str) -> str:
     return f"There's no saved information related to paper {paper_id}."
 
 
-
 @mcp.resource("papers://folders")
 def get_available_folders() -> str:
     """
@@ -190,4 +189,4 @@ def generate_search_prompt(topic: str, num_papers: int = 5) -> str:
 
 if __name__ == "__main__":
     # Initialize and run the server
-    mcp.run(transport='sse')
+    mcp.run(transport='sse', host="0.0.0.0", port=8001)
