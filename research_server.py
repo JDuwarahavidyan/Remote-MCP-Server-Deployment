@@ -4,6 +4,7 @@ import os
 from typing import List
 from mcp.server.fastmcp import FastMCP
 
+
 PAPER_DIR = "papers"
 
 # Initialize FastMCP server
@@ -189,9 +190,18 @@ def generate_search_prompt(topic: str, num_papers: int = 5) -> str:
 
 if __name__ == "__main__":
     import uvicorn
+    from starlette.applications import Starlette
+    from starlette.middleware.trustedhost import TrustedHostMiddleware
+
     app = mcp.sse_app()
+    
+    # Wrap with a new Starlette app that allows all hosts
+    wrapped = Starlette()
+    wrapped.add_middleware(TrustedHostMiddleware, allowed_hosts=["*"])
+    wrapped.mount("/", app)
+
     uvicorn.run(
-        app,
+        wrapped,
         host="0.0.0.0",
         port=8001,
         forwarded_allow_ips="*",
