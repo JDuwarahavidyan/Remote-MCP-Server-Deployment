@@ -4,11 +4,10 @@ import os
 from typing import List
 from mcp.server.fastmcp import FastMCP
 
-
 PAPER_DIR = "papers"
 
 # Initialize FastMCP server
-mcp = FastMCP("research", port=8001)
+mcp = FastMCP("research", host="0.0.0.0", port=8001)
 
 @mcp.tool()
 def search_papers(topic: str, max_results: int = 5) -> List[str]:
@@ -96,6 +95,7 @@ def extract_info(paper_id: str) -> str:
                     continue
     
     return f"There's no saved information related to paper {paper_id}."
+
 
 
 @mcp.resource("papers://folders")
@@ -189,21 +189,5 @@ def generate_search_prompt(topic: str, num_papers: int = 5) -> str:
     Please present both detailed information about each paper and a high-level synthesis of the research landscape in {topic}."""
 
 if __name__ == "__main__":
-    import uvicorn
-    from starlette.applications import Starlette
-    from starlette.middleware.trustedhost import TrustedHostMiddleware
-
-    app = mcp.sse_app()
-    
-    # Wrap with a new Starlette app that allows all hosts
-    wrapped = Starlette()
-    wrapped.add_middleware(TrustedHostMiddleware, allowed_hosts=["*"])
-    wrapped.mount("/", app)
-
-    uvicorn.run(
-        wrapped,
-        host="0.0.0.0",
-        port=8001,
-        forwarded_allow_ips="*",
-        proxy_headers=True
-    )
+    # Initialize and run the server
+    mcp.run(transport='sse')
