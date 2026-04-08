@@ -190,7 +190,7 @@ def generate_search_prompt(topic: str, num_papers: int = 5) -> str:
 
 if __name__ == "__main__":
     # Initialize and run the server
-    port = int(os.environ.get("PORT", 8001))
+
     
     # Passing them here ensures they are used during startup
-    mcp.run(transport='sse', port=port)
+    mcp.run(transport='sse')
