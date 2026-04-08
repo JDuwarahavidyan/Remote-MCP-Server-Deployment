@@ -190,4 +190,10 @@ def generate_search_prompt(topic: str, num_papers: int = 5) -> str:
 if __name__ == "__main__":
     import uvicorn
     app = mcp.sse_app()
-    uvicorn.run(app, host="0.0.0.0", port=8001)
+    uvicorn.run(
+        app,
+        host="0.0.0.0",
+        port=8001,
+        forwarded_allow_ips="*",
+        proxy_headers=True
+    )
